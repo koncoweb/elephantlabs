@@ -1,0 +1,42 @@
+# ElephantLabs
+
+> ElephantLabs is a free text-to-speech (TTS) web tool. Type text, pick an AI voice (Deepgram Flux via OpenRouter), play in the browser, and download MP3. 3 voices free anonymously; all 36 voices require login with a koncoweb account (Neon Auth). Site language: Indonesian (some pages bilingual EN/ID).
+
+- Site: https://elephantlabs.web.id
+- Sitemap: https://elephantlabs.web.id/sitemap.xml
+- Contact: M.M. Billy — koncoweb@gmail.com — +62 851-5073-1986
+- Source: https://github.com/koncoweb/elephantlabs
+
+## Pages
+
+- [Home / TTS playground (3 free voices)](https://elephantlabs.web.id/): hero + interactive TTS demo + features + FAQ
+- [Text to Speech — all 36 voices (login required)](https://elephantlabs.web.id/text-to-speech): full voice catalog playground
+- [Login](https://elephantlabs.web.id/login): sign in / sign up with koncoweb account (email + password, Neon Auth)
+- [About](https://elephantlabs.web.id/about): what ElephantLabs is and how it works (EN/ID toggle)
+- [Privacy Policy](https://elephantlabs.web.id/privacy): data collection, retention, rights (EN/ID toggle)
+- [Data Security](https://elephantlabs.web.id/security): encryption, server-side keys, no audio storage (EN/ID toggle)
+- [Contact](https://elephantlabs.web.id/contact): support and partnership channels (EN/ID toggle)
+
+## Text-to-Speech API
+
+`POST https://elephantlabs.web.id/api/speech` — JSON request, raw audio response.
+
+```bash
+curl https://elephantlabs.web.id/api/speech \
+  -H "Content-Type: application/json" \
+  -d '{"input":"Halo! Ini uji suara.","voice":"flux-alexis-en","response_format":"mp3"}' \
+  --output out.mp3
+```
+
+- `input` (string, required, max 2000 chars): text to synthesize
+- `voice` (string, optional, default `flux-alexis-en`): `flux-<name>-en`, 36 voices (alexis, bree, brittany, brooke, bruce, cliff, cole, colin, conor, donovan, drew, elise, gemma, haley, hannah, heather, jack, kai, kelsey, kit, maeve, marcelo, marcus, meena, meghan, miles, naveen, paige, priya, rufus, sean, sharon, sienna, tanner, wade, wes)
+- `response_format` (`mp3` | `pcm`, default `mp3`)
+- Auth: 3 homepage voices (alexis, bree, marcus) work anonymously; other voices return `401` unless the request carries a logged-in koncoweb session cookie
+- Rate limit: 1 free generation per browser, then an upsell modal appears
+- Errors: JSON `{"error":{"code":<http-status>,"message":"..."}}`
+
+## Notes for AI agents
+
+- Stack: Astro 4 (hybrid SSR) + Tailwind v4, `@neondatabase/neon-js` auth client, deploys on Netlify
+- Auth: Managed Better Auth on Neon project `koncowebportal`; session via HttpOnly cookies; verify server-side at `<auth-base-url>/get-session`
+- Do not commit secrets (`.env` is gitignored); see `README.md` for fork/dev/deploy instructions
