@@ -1,19 +1,22 @@
 ---
-// Navbar — statis, tanpa fetch/API
-const links = ["Products", "Solutions", "Customers", "Resources", "Enterprise", "Pricing"];
+// Navbar — satu menu per halaman standar (link asli, tanpa duplikat)
+const links = [
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Security", href: "/security" },
+];
 ---
 
 <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-neutral-100">
   <nav class="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between px-6 lg:px-8">
     <!-- Logo kiri -->
-    <a href="/" class="flex items-center gap-2 shrink-0" aria-label="ElephantLabs home">
-      <!-- Ikon gajah hitam minimalis -->
-      <span class="grid h-7 w-7 place-items-center rounded-[7px] bg-black">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true">
-          <path d="M17.2 3.5c-1.1 0-2 .3-2.7.8C13.3 3.5 11.4 3 9.3 3 5.6 3 2.8 5.7 2.8 9.2c0 1.5.5 2.8 1.4 3.9-.1.4-.2.9-.2 1.4 0 1.7 1 3 2.4 3.5.3.6 1 1 1.8 1 1.2 0 2.1-.9 2.1-2 0-.3 0-.5-.1-.8l1.1-.6c.4 1 1.2 1.7 2.2 1.9l.7 2.1c.1.4.5.6.9.5.4-.1.6-.5.5-.9l-.6-1.9c1-.3 1.8-1.1 2-2.2l1.6-7.1c.2-1.1-.4-3.5-1.4-4.5ZM8.2 16.9c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1Zm4.1-8.2c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9Z"/>
-        </svg>
+    <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="ElephantLabs home">
+      <img src="/elephantlabslogo.png" alt="ElephantLabs logo" class="h-9 w-auto" />
+      <span class="leading-none">
+        <span class="block text-[19px] font-bold tracking-[-0.02em] text-black">ElephantLabs</span>
+        <span class="mt-1 block text-[10.5px] font-medium tracking-wide text-neutral-500">a Koncoweb Product</span>
       </span>
-      <span class="text-[19px] font-bold tracking-[-0.02em] text-black">ElephantLabs</span>
     </a>
 
     <!-- Menu tengah (desktop) -->
@@ -21,10 +24,10 @@ const links = ["Products", "Solutions", "Customers", "Resources", "Enterprise", 
       {links.map((item) => (
         <li>
           <a
-            href="#"
+            href={item.href}
             class="text-[14.5px] font-medium text-neutral-600 transition-colors hover:text-black"
           >
-            {item}
+            {item.label}
           </a>
         </li>
       ))}
@@ -32,18 +35,30 @@ const links = ["Products", "Solutions", "Customers", "Resources", "Enterprise", 
 
     <!-- Aksi kanan -->
     <div class="flex items-center gap-2 sm:gap-3">
-      <a
-        href="#"
-        class="hidden sm:inline-flex rounded-full px-4 py-2 text-[14.5px] font-medium text-neutral-800 transition-colors hover:text-black"
-      >
-        Log in
-      </a>
-      <a
-        href="#"
-        class="inline-flex items-center justify-center rounded-full bg-black px-[20px] py-[9px] text-[14.5px] font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.98]"
-      >
-        Sign up
-      </a>
+      <span id="nav-user-wrap" class="hidden items-center gap-2">
+        <span id="nav-user-email" class="hidden max-w-[160px] truncate text-[14px] font-medium text-neutral-700 sm:inline"></span>
+        <button
+          id="nav-logout"
+          type="button"
+          class="rounded-full px-4 py-2 text-[14.5px] font-medium text-neutral-800 transition-colors hover:text-black"
+        >
+          Log out
+        </button>
+      </span>
+      <span id="nav-guest-wrap" class="flex items-center gap-2 sm:gap-3">
+        <a
+          href="/login"
+          class="hidden sm:inline-flex rounded-full px-4 py-2 text-[14.5px] font-medium text-neutral-800 transition-colors hover:text-black"
+        >
+          Log in
+        </a>
+        <a
+          href="/login?mode=signup"
+          class="inline-flex items-center justify-center rounded-full bg-black px-[20px] py-[9px] text-[14.5px] font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.98]"
+        >
+          Sign up
+        </a>
+      </span>
       <!-- Hamburger mobile -->
       <button
         type="button"
@@ -62,11 +77,34 @@ const links = ["Products", "Solutions", "Customers", "Resources", "Enterprise", 
     <ul class="flex flex-col gap-1">
       {links.map((item) => (
         <li>
-          <a href="#" class="block rounded-lg px-2 py-2 text-[15px] font-medium text-neutral-700 hover:bg-neutral-50 hover:text-black">
-            {item}
+          <a href={item.href} class="block rounded-lg px-2 py-2 text-[15px] font-medium text-neutral-700 hover:bg-neutral-50 hover:text-black">
+            {item.label}
           </a>
         </li>
       ))}
     </ul>
   </div>
 </header>
+
+<script>
+  import { authClient, getSessionUser } from '../lib/auth';
+
+  const guestWrap = document.getElementById('nav-guest-wrap');
+  const userWrap = document.getElementById('nav-user-wrap');
+  const userEmail = document.getElementById('nav-user-email');
+  const logoutBtn = document.getElementById('nav-logout');
+
+  getSessionUser().then((u) => {
+    if (!u) return;
+    guestWrap?.classList.add('hidden');
+    guestWrap?.classList.remove('flex');
+    userWrap?.classList.remove('hidden');
+    userWrap?.classList.add('flex');
+    if (userEmail) userEmail.textContent = u.email;
+  });
+
+  logoutBtn?.addEventListener('click', async () => {
+    await authClient.signOut();
+    window.location.reload();
+  });
+</script>

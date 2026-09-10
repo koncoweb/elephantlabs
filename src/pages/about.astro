@@ -1,0 +1,70 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DocPage from '../components/DocPage.astro';
+---
+
+<Layout
+  title="About — ElephantLabs"
+  description="Learn what ElephantLabs is, what we build, and how our text-to-speech playground works. / Pelajari apa itu ElephantLabs dan cara kerja playground text-to-speech kami."
+>
+  <DocPage
+    titleEn="About ElephantLabs"
+    titleId="Tentang ElephantLabs"
+    descEn="ElephantLabs turns written text into natural-sounding speech. Our goal is simple: bringing technology to life through accessible, high-quality voice AI."
+    descId="ElephantLabs mengubah teks tertulis menjadi suara yang terdengar natural. Tujuan kami sederhana: menghidupkan teknologi melalui voice AI yang mudah diakses dan berkualitas tinggi."
+    updatedEn="September 10, 2026"
+    updatedId="10 September 2026"
+  >
+    <Fragment slot="en">
+      <h2>What we do</h2>
+      <p>
+        ElephantLabs provides a text-to-speech playground where anyone can type text,
+        choose a voice, and instantly hear it spoken aloud. It is designed for creators,
+        developers, educators, and teams exploring voice AI for the first time.
+      </p>
+      <h2>How it works</h2>
+      <ul>
+        <li>Type or paste up to 2,000 characters into the playground.</li>
+        <li>Pick a voice from the Flux voice catalog.</li>
+        <li>Press play to synthesize, listen in your browser, and download the MP3.</li>
+      </ul>
+      <h2>Technology</h2>
+      <p>
+        Synthesis is powered by Deepgram Flux TTS, accessed securely through OpenRouter.
+        Your API credentials never leave our servers — the browser only talks to our
+        own <a href="/security">audited speech endpoint</a>. We store no audio on our side.
+      </p>
+      <h2>Who we are</h2>
+      <p>
+        ElephantLabs is an independent project maintained by M.M. Billy. For questions,
+        partnerships, or support, visit our <a href="/contact">contact page</a>.
+      </p>
+    </Fragment>
+    <Fragment slot="id">
+      <h2>Apa yang kami lakukan</h2>
+      <p>
+        ElephantLabs menyediakan playground text-to-speech tempat siapa pun bisa mengetik
+        teks, memilih suara, dan langsung mendengarnya dibacakan. Dirancang untuk kreator,
+        developer, pendidik, dan tim yang baru menjelajahi voice AI.
+      </p>
+      <h2>Cara kerja</h2>
+      <ul>
+        <li>Ketik atau tempel teks hingga 2.000 karakter ke playground.</li>
+        <li>Pilih suara dari katalog suara Flux.</li>
+        <li>Tekan play untuk sintesis, dengarkan di browser, dan unduh MP3-nya.</li>
+      </ul>
+      <h2>Teknologi</h2>
+      <p>
+        Sintesis didukung oleh Deepgram Flux TTS, diakses secara aman melalui OpenRouter.
+        Kredensial API tidak pernah keluar dari server kami — browser hanya berkomunikasi
+        dengan <a href="/security">endpoint speech milik kami yang teraudit</a>. Kami tidak
+        menyimpan audio apa pun.
+      </p>
+      <h2>Siapa kami</h2>
+      <p>
+        ElephantLabs adalah proyek independen yang dikelola oleh M.M. Billy. Untuk pertanyaan,
+        kemitraan, atau dukungan, kunjungi <a href="/contact">halaman kontak</a>.
+      </p>
+    </Fragment>
+  </DocPage>
+</Layout>

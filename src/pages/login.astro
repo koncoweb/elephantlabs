@@ -1,0 +1,126 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Login — ElephantLabs"
+  description="Login dengan akun koncoweb Anda untuk mengakses semua 36 suara AI di ElephantLabs."
+>
+  <Navbar />
+  <main class="bg-white">
+    <div class="mx-auto max-w-[420px] px-6 pb-24 pt-14 lg:pt-20">
+      <h1 id="login-title" class="text-[32px] font-extrabold tracking-[-0.03em] text-black">
+        Login akun koncoweb
+      </h1>
+      <p class="mt-2 text-[15px] leading-relaxed text-neutral-600">
+        Masuk untuk membuka semua 36 suara AI di halaman text to speech.
+      </p>
+
+      <form id="login-form" class="mt-8 space-y-3">
+        <input
+          id="login-email"
+          type="email"
+          required
+          autocomplete="email"
+          placeholder="Email koncoweb"
+          class="h-[48px] w-full rounded-xl border border-neutral-300 bg-white px-4 text-[15px] text-black outline-none placeholder:text-neutral-400 focus:border-black"
+        />
+        <input
+          id="login-password"
+          type="password"
+          required
+          minlength="8"
+          autocomplete="current-password"
+          placeholder="Password (min. 8 karakter)"
+          class="h-[48px] w-full rounded-xl border border-neutral-300 bg-white px-4 text-[15px] text-black outline-none placeholder:text-neutral-400 focus:border-black"
+        />
+        <button
+          id="login-submit"
+          type="submit"
+          class="h-[48px] w-full rounded-full bg-black text-[15px] font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.99] disabled:opacity-50"
+        >
+          Login
+        </button>
+      </form>
+
+      <p id="login-error" class="mt-3 hidden min-h-[20px] text-[14px] text-red-600" aria-live="polite"></p>
+
+      <p class="mt-4 text-center text-[14px] text-neutral-600">
+        <span id="login-switch-text">Belum punya akun?</span>{' '}
+        <button id="login-switch" type="button" class="font-semibold text-black underline decoration-neutral-300 underline-offset-4 hover:decoration-black">
+          Daftar
+        </button>
+      </p>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  import { authClient, getSessionUser } from '../lib/auth';
+
+  const params = new URLSearchParams(window.location.search);
+  const next = params.get('next') || '/text-to-speech';
+  const startMode = params.get('mode') === 'signup' ? 'signup' : 'login';
+
+  const form = document.getElementById('login-form');
+  const emailEl = document.getElementById('login-email');
+  const passEl = document.getElementById('login-password');
+  const submitBtn = document.getElementById('login-submit');
+  const titleEl = document.getElementById('login-title');
+  const errEl = document.getElementById('login-error');
+  const switchBtn = document.getElementById('login-switch');
+  const switchText = document.getElementById('login-switch-text');
+
+  let mode = startMode;
+
+  function renderMode() {
+    const signup = mode === 'signup';
+    titleEl.textContent = signup ? 'Buat akun koncoweb' : 'Login akun koncoweb';
+    submitBtn.textContent = signup ? 'Daftar' : 'Login';
+    switchText.textContent = signup ? 'Sudah punya akun?' : 'Belum punya akun?';
+    switchBtn.textContent = signup ? 'Login' : 'Daftar';
+    passEl.setAttribute('autocomplete', signup ? 'new-password' : 'current-password');
+  }
+
+  switchBtn?.addEventListener('click', () => {
+    mode = mode === 'login' ? 'signup' : 'login';
+    errEl.classList.add('hidden');
+    renderMode();
+  });
+  renderMode();
+
+  // Sudah login? Langsung lanjut.
+  getSessionUser().then((u) => {
+    if (u) window.location.href = next;
+  });
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errEl.classList.add('hidden');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Memproses…';
+    try {
+      const email = emailEl.value.trim();
+      const password = passEl.value;
+      const res =
+        mode === 'signup'
+          ? await authClient.signUp.email({ name: email.split('@')[0] || 'User', email, password })
+          : await authClient.signIn.email({ email, password });
+      if (res.error) {
+        errEl.textContent = res.error.message || 'Login gagal — periksa email & password.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      window.location.href = next;
+    } catch (err) {
+      errEl.textContent = 'Network error — coba lagi.';
+      errEl.classList.remove('hidden');
+    } finally {
+      submitBtn.disabled = false;
+      renderMode();
+    }
+  });
+</script>

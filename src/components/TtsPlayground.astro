@@ -1,0 +1,330 @@
+---
+import type { Voice } from '../data/voices';
+
+interface Props {
+  voices: Voice[];
+  /** Tampilkan teks petunjuk login di bawah pilihan suara. */
+  showLoginHint?: boolean;
+  /** Teks caption kecil di bawah kartu. */
+  caption?: string;
+}
+
+const {
+  voices,
+  showLoginHint = false,
+  caption = 'Powered by ElephantLabs Voice AI — via OpenRouter Flux TTS'
+} = Astro.props;
+
+const quick = voices.slice(0, 3);
+---
+
+<div class="w-full">
+  <div class="rounded-2xl border border-neutral-200 bg-white shadow-[0_8px_40px_-12px_rgba(0,0,0,0.15)]">
+    <!-- Top bar -->
+    <div class="flex items-center gap-2 border-b border-neutral-100 px-5 py-3.5">
+      <span class="text-[13px] font-semibold tracking-wide text-neutral-800">TEXT TO SPEECH</span>
+      <span class="ml-1 rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-semibold text-neutral-600">FLUX</span>
+      <div class="ml-auto">
+        <select
+          id="tts-voice"
+          class="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[13px] font-medium text-neutral-700 outline-none focus:border-black"
+          aria-label="Pilih voice"
+        >
+          {voices.map((v) => (
+            <option value={v.id} selected={v.id === voices[0].id}>{v.id}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    <!-- Text area -->
+    <div class="px-5 pt-4">
+      <textarea
+        id="tts-input"
+        rows="4"
+        maxlength="2000"
+        class="min-h-[108px] w-full resize-none text-[15px] leading-relaxed text-neutral-900 outline-none placeholder:text-neutral-400"
+        placeholder="Ketik teks di sini…"
+      >Halo! Ini adalah uji text-to-speech ElephantLabs memakai Deepgram Flux.</textarea>
+
+      <!-- Voice pills cepat -->
+      <div class="mt-3 flex flex-wrap gap-2" id="tts-quick">
+        {quick.map((v, i) => (
+          <button
+            type="button"
+            data-voice={v.id}
+            class:list={[
+              "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[13px] font-medium transition-colors",
+              i === 0
+                ? "border-black bg-white text-black"
+                : "border-neutral-200 bg-white text-neutral-600 hover:border-neutral-400 hover:text-black",
+            ]}
+          >
+            <span class="h-4 w-4 rounded-full bg-gradient-to-br from-neutral-700 to-neutral-300"></span>
+            {v.label}
+          </button>
+        ))}
+      </div>
+
+      {showLoginHint && (
+        <p class="mt-2 text-[13px] text-neutral-500">
+          <a href="/login?next=/text-to-speech" class="font-semibold text-black underline decoration-neutral-300 underline-offset-4 hover:decoration-black">Login</a>
+          {' '}untuk mengakses semua suara.
+        </p>
+      )}
+      <p id="tts-status" class="mt-2 min-h-[20px] text-[13px] text-neutral-500" aria-live="polite"></p>
+    </div>
+
+    <!-- Player bar -->
+    <div class="mt-2 flex items-center gap-3 rounded-b-2xl bg-neutral-50 px-5 py-4">
+      <button
+        id="tts-play"
+        type="button"
+        aria-label="Play"
+        class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-black text-white transition-transform hover:scale-105 disabled:opacity-50"
+      >
+        <svg id="tts-icon-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+          <path d="M3.5 1.8v10.4c0 .8.9 1.3 1.6.9l8-5.2c.6-.4.6-1.4 0-1.8l-8-5.2c-.7-.4-1.6.1-1.6.9Z"/>
+        </svg>
+      </button>
+      <!-- Waveform -->
+      <div class="flex h-8 flex-1 items-center gap-[3px]" aria-hidden="true">
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:30%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:55%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:40%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:75%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:60%"></span>
+        <span class="w-[3px] rounded-full bg-black" style="height:90%"></span>
+        <span class="w-[3px] rounded-full bg-black" style="height:100%"></span>
+        <span class="w-[3px] rounded-full bg-black" style="height:70%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:50%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:80%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:45%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:65%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:35%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:60%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:50%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:75%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:40%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:55%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:30%"></span>
+        <span class="w-[3px] rounded-full bg-neutral-300" style="height:48%"></span>
+      </div>
+      <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-neutral-600">
+        deepgram/flux-tts:free
+      </span>
+      <button
+        id="tts-download"
+        type="button"
+        disabled
+        aria-label="Download audio"
+        title="Download audio"
+        class="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-neutral-600 transition-all hover:border-black hover:text-black disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-neutral-200 disabled:hover:text-neutral-600"
+      >
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 1.5v6M3.5 5.3 6 7.8l2.5-2.5M1.8 9.3v.9c0 .3.2.5.5.5h7.4c.3 0 .5-.2.5-.5v-.9"/>
+        </svg>
+        Download
+      </button>
+      <audio id="tts-audio" class="hidden" preload="none"></audio>
+    </div>
+  </div>
+
+  <!-- Modal rate limit: muncul saat generate ke-2 dst -->
+  <div id="tts-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Batas generasi tercapai">
+    <div id="tts-modal-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <div class="relative w-full max-w-[380px] overflow-hidden rounded-3xl bg-white shadow-[0_24px_80px_-12px_rgba(0,0,0,0.35)]">
+      <button
+        id="tts-modal-close"
+        type="button"
+        aria-label="Tutup"
+        class="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-black/50 text-white backdrop-blur transition-colors hover:bg-black disabled:cursor-wait disabled:opacity-50"
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 2.5l9 9M11.5 2.5l-9 9"/></svg>
+      </button>
+      <a href="https://www.koncoweb.id/landing/MembershipKoncoweb" target="_blank" rel="noopener" aria-label="Pelatihan membership Koncoweb">
+        <img src="/modaliklan.png" alt="Pelatihan membership Koncoweb" class="h-auto w-full" loading="lazy" />
+      </a>
+      <div class="px-6 pb-7 pt-5 text-center">
+        <p class="text-[15px] font-semibold leading-relaxed text-black">
+          ikuti pelatihan membership Koncoweb untuk buat aplikasi apapun Tanpa Koding - Pakai AI
+        </p>
+        <a
+          href="https://www.koncoweb.id/landing/MembershipKoncoweb"
+          target="_blank"
+          rel="noopener"
+          class="mt-5 inline-flex h-[44px] w-full items-center justify-center rounded-full bg-black text-[14.5px] font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.99]"
+        >
+          Ikut Pelatihan
+        </a>
+        <button
+          id="tts-modal-later"
+          type="button"
+          class="mt-2 inline-flex h-[40px] w-full items-center justify-center rounded-full text-[14px] font-medium text-neutral-500 transition-colors hover:text-black disabled:cursor-wait disabled:opacity-50 disabled:hover:text-neutral-500"
+        >
+          Nanti saja
+        </button>
+        <p id="tts-modal-count" class="mt-1 min-h-[18px] text-[12px] text-neutral-400"></p>
+      </div>
+    </div>
+  </div>
+
+  <p class="mt-4 text-center text-[13px] text-neutral-500">
+    {caption}
+  </p>
+</div>
+
+<script>
+  const input = document.getElementById("tts-input");
+  const voiceSelect = document.getElementById("tts-voice");
+  const playBtn = document.getElementById("tts-play");
+  const status = document.getElementById("tts-status");
+  const audio = document.getElementById("tts-audio");
+  const quick = document.getElementById("tts-quick");
+  const downloadBtn = document.getElementById("tts-download");
+  const modal = document.getElementById("tts-modal");
+  const modalClose = document.getElementById("tts-modal-close");
+  const modalLater = document.getElementById("tts-modal-later");
+  const modalCount = document.getElementById("tts-modal-count");
+
+  const GEN_KEY = "el-generations";
+  const AD_SECONDS = 5;
+  let modalLocked = false;
+  let modalTimer = null;
+
+  function openModal() {
+    modal?.classList.remove("hidden");
+    modal?.classList.add("flex");
+    document.body.style.overflow = "hidden";
+    // Kunci tombol tutup selama 5 detik
+    modalLocked = true;
+    modalClose?.setAttribute("disabled", "");
+    modalLater?.setAttribute("disabled", "");
+    let left = AD_SECONDS;
+    if (modalCount) modalCount.textContent = "Tutup dalam " + left + " detik…";
+    if (modalTimer) clearInterval(modalTimer);
+    modalTimer = setInterval(() => {
+      left -= 1;
+      if (left <= 0) {
+        if (modalTimer) clearInterval(modalTimer);
+        modalTimer = null;
+        modalLocked = false;
+        modalClose?.removeAttribute("disabled");
+        modalLater?.removeAttribute("disabled");
+        if (modalCount) modalCount.textContent = "";
+      } else if (modalCount) {
+        modalCount.textContent = "Tutup dalam " + left + " detik…";
+      }
+    }, 1000);
+  }
+
+  function closeModal() {
+    if (modalLocked) return;
+    if (modalTimer) {
+      clearInterval(modalTimer);
+      modalTimer = null;
+    }
+    modal?.classList.add("hidden");
+    modal?.classList.remove("flex");
+    document.body.style.overflow = "";
+  }
+
+  function genCount() {
+    try {
+      return parseInt(localStorage.getItem(GEN_KEY) || "0", 10) || 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  document.getElementById("tts-modal-close")?.addEventListener("click", closeModal);
+  document.getElementById("tts-modal-later")?.addEventListener("click", closeModal);
+  document.getElementById("tts-modal-backdrop")?.addEventListener("click", closeModal);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  });
+
+  quick?.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-voice]");
+    if (!btn) return;
+    voiceSelect.value = btn.dataset.voice;
+    quick.querySelectorAll("button").forEach((b) => {
+      const active = b === btn;
+      b.classList.toggle("border-black", active);
+      b.classList.toggle("text-black", active);
+      b.classList.toggle("border-neutral-200", !active);
+      b.classList.toggle("text-neutral-600", !active);
+    });
+    status.textContent = "Voice: " + btn.dataset.voice;
+  });
+
+  voiceSelect?.addEventListener("change", () => {
+    status.textContent = "Voice: " + voiceSelect.value;
+  });
+
+  let objectUrl = null;
+  let downloadName = "elephantlabs-tts.mp3";
+
+  downloadBtn?.addEventListener("click", () => {
+    if (!objectUrl) return;
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = downloadName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  playBtn?.addEventListener("click", async () => {
+    const text = input.value.trim();
+    if (!text) {
+      status.textContent = "Tulis teks dulu sebelum play.";
+      return;
+    }
+    // Rate limit: 1x generate gratis, berikutnya tampilkan modal iklan
+    if (genCount() >= 1) {
+      openModal();
+      return;
+    }
+    playBtn.disabled = true;
+    status.textContent = "Memproses suara…";
+    try {
+      const res = await fetch("/api/speech", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          input: text,
+          voice: voiceSelect.value,
+          response_format: "mp3",
+        }),
+      });
+      if (!res.ok) {
+        let msg = "Gagal (" + res.status + ")";
+        try {
+          const j = await res.json();
+          if (j?.error?.message) msg = j.error.message;
+        } catch {}
+        status.textContent = msg;
+        // 401 (belum login) → tampilkan modal membership
+        if (res.status === 401) openModal();
+        return;
+      }
+      const blob = await res.blob();
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      objectUrl = URL.createObjectURL(blob);
+      audio.src = objectUrl;
+      const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+      downloadName = "elephantlabs-" + voiceSelect.value + "-" + stamp + ".mp3";
+      if (downloadBtn) downloadBtn.disabled = false;
+      try {
+        localStorage.setItem(GEN_KEY, String(genCount() + 1));
+      } catch {}
+      await audio.play();
+      status.textContent = "Selesai — memutar " + voiceSelect.value + ". Klik Download untuk menyimpan.";
+    } catch (err) {
+      status.textContent = "Network error — coba lagi.";
+    } finally {
+      playBtn.disabled = false;
+    }
+  });
+</script>

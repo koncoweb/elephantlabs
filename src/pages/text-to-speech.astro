@@ -1,0 +1,59 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import TtsPlayground from '../components/TtsPlayground.astro';
+import Footer from '../components/Footer.astro';
+import { allVoices } from '../data/voices';
+---
+
+<Layout
+  title="Text to Speech Gratis — 36 Suara AI | ElephantLabs"
+  description="Halaman text to speech lengkap ElephantLabs: 36 suara AI Flux gratis. Ubah teks jadi suara MP3, pilih narator favorit, play dan download."
+>
+  <Navbar />
+  <main class="bg-white">
+    <div class="mx-auto max-w-[760px] px-6 pb-8 pt-14 lg:px-8 lg:pt-16">
+      <h1 class="text-[36px] font-extrabold leading-[1.05] tracking-[-0.03em] text-black sm:text-[44px]">
+        Text to Speech: semua suara
+      </h1>
+      <p class="mt-4 text-[16px] leading-relaxed text-neutral-600">
+        Katalog lengkap <strong class="font-semibold text-black">36 suara AI Flux gratis</strong> —
+        ketik teks, pilih narator favorit, tekan play, lalu download MP3-nya.
+      </p>
+    </div>
+    <div class="mx-auto max-w-[760px] px-6 pb-24 lg:px-8">
+      <!-- Tampilan terkunci (belum login) -->
+      <div id="tts-locked" class="rounded-2xl border border-neutral-200 bg-neutral-50 p-10 text-center">
+        <p class="text-[17px] font-bold text-black">Login untuk membuka 36 suara</p>
+        <p class="mx-auto mt-2 max-w-[420px] text-[14.5px] leading-relaxed text-neutral-600">
+          Masuk dengan akun koncoweb Anda untuk memakai semua suara AI di halaman ini.
+          Tanpa login, 3 suara gratis tetap bisa dipakai di <a href="/#playground" class="font-medium text-black underline decoration-neutral-300 underline-offset-4 hover:decoration-black">homepage</a>.
+        </p>
+        <a
+          href="/login?next=/text-to-speech"
+          class="mt-6 inline-flex h-[46px] items-center justify-center rounded-full bg-black px-8 text-[15px] font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.98]"
+        >
+          Login akun koncoweb
+        </a>
+      </div>
+      <!-- Playground penuh (wajib login) -->
+      <div id="tts-full" class="hidden">
+        <TtsPlayground
+          voices={allVoices}
+          caption="36 suara Deepgram Flux via OpenRouter — gratis"
+        />
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  import { getSessionUser } from '../lib/auth';
+
+  getSessionUser().then((u) => {
+    if (!u) return;
+    document.getElementById('tts-locked')?.classList.add('hidden');
+    document.getElementById('tts-full')?.classList.remove('hidden');
+  });
+</script>

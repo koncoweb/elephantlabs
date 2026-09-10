@@ -1,0 +1,98 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DocPage from '../components/DocPage.astro';
+---
+
+<Layout
+  title="Data Security — ElephantLabs"
+  description="How ElephantLabs protects your data, credentials, and generated audio. / Bagaimana ElephantLabs melindungi data, kredensial, dan audio hasil sintesis Anda."
+>
+  <DocPage
+    titleEn="Data Security"
+    titleId="Keamanan Data"
+    descEn="Security is built into how ElephantLabs handles every synthesis request — from your browser to our providers and back."
+    descId="Keamanan tertanam dalam cara ElephantLabs menangani setiap permintaan sintesis — dari browser Anda ke penyedia kami dan kembali."
+    updatedEn="September 10, 2026"
+    updatedId="10 September 2026"
+  >
+    <Fragment slot="en">
+      <h2>1. Encryption in transit</h2>
+      <p>
+        All traffic between your browser, our servers, and our speech providers travels
+        over encrypted HTTPS connections. Unencrypted HTTP is never used for the
+        speech API.
+      </p>
+      <h2>2. API keys stay server-side</h2>
+      <p>
+        Provider credentials (such as our OpenRouter API key) live only in server
+        environment variables. They are never embedded in pages, JavaScript bundles,
+        or client-side requests — your browser communicates exclusively with our own
+        <code>/api/speech</code> endpoint.
+      </p>
+      <h2>3. No audio stored</h2>
+      <ul>
+        <li>Generated audio is streamed directly back to your browser.</li>
+        <li>Responses carry <code>Cache-Control: no-store</code> directives.</li>
+        <li>We keep no library of your texts or audio files on our servers.</li>
+      </ul>
+      <h2>4. Input validation and limits</h2>
+      <ul>
+        <li>Text input is capped at 2,000 characters per request.</li>
+        <li>Voice identifiers are checked against a strict allowlist.</li>
+        <li>Malformed requests are rejected before ever reaching providers.</li>
+      </ul>
+      <h2>5. Subprocessors</h2>
+      <p>Synthesis requests are processed by:</p>
+      <ul>
+        <li><strong>OpenRouter</strong> — API gateway routing to speech models.</li>
+        <li><strong>Deepgram (Flux TTS)</strong> — the text-to-speech model.</li>
+      </ul>
+      <h2>6. Reporting a vulnerability</h2>
+      <p>
+        Found a security issue? Please report it responsibly to
+        <a href="mailto:koncoweb@gmail.com">koncoweb@gmail.com</a> with details and
+        reproduction steps. We will acknowledge receipt and work on a fix promptly.
+      </p>
+    </Fragment>
+    <Fragment slot="id">
+      <h2>1. Enkripsi dalam transit</h2>
+      <p>
+        Seluruh lalu lintas antara browser Anda, server kami, dan penyedia speech kami
+        berjalan melalui koneksi HTTPS terenkripsi. HTTP tanpa enkripsi tidak pernah
+        digunakan untuk API speech.
+      </p>
+      <h2>2. API key tetap di server</h2>
+      <p>
+        Kredensial penyedia (seperti OpenRouter API key milik kami) hanya tersimpan di
+        environment variable server. Kredensial tidak pernah tertanam di halaman, bundel
+        JavaScript, atau permintaan client-side — browser Anda berkomunikasi eksklusif
+        dengan endpoint <code>/api/speech</code> milik kami.
+      </p>
+      <h2>3. Audio tidak disimpan</h2>
+      <ul>
+        <li>Audio yang dihasilkan dialirkan langsung kembali ke browser Anda.</li>
+        <li>Respons membawa direktif <code>Cache-Control: no-store</code>.</li>
+        <li>Kami tidak menyimpan pustaka teks atau file audio Anda di server kami.</li>
+      </ul>
+      <h2>4. Validasi input dan batasan</h2>
+      <ul>
+        <li>Input teks dibatasi 2.000 karakter per permintaan.</li>
+        <li>Identitas suara diperiksa terhadap allowlist yang ketat.</li>
+        <li>Permintaan yang cacat ditolak sebelum mencapai penyedia.</li>
+      </ul>
+      <h2>5. Subprosesor</h2>
+      <p>Permintaan sintesis diproses oleh:</p>
+      <ul>
+        <li><strong>OpenRouter</strong> — gerbang API yang merutekan ke model speech.</li>
+        <li><strong>Deepgram (Flux TTS)</strong> — model text-to-speech.</li>
+      </ul>
+      <h2>6. Melaporkan kerentanan</h2>
+      <p>
+        Menemukan masalah keamanan? Laporkan secara bertanggung jawab ke
+        <a href="mailto:koncoweb@gmail.com">koncoweb@gmail.com</a> beserta detail dan
+        langkah reproduksi. Kami akan mengonfirmasi penerimaan dan segera mengerjakan
+        perbaikan.
+      </p>
+    </Fragment>
+  </DocPage>
+</Layout>

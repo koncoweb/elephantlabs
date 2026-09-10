@@ -1,0 +1,27 @@
+---
+import { faqs } from '../data/faq';
+---
+
+<section class="border-t border-neutral-100 bg-white">
+  <div class="mx-auto max-w-[760px] px-6 py-16 lg:px-8 lg:py-24">
+    <h2 class="text-[28px] font-extrabold leading-tight tracking-[-0.02em] text-black sm:text-[36px]">
+      Pertanyaan seputar TTS gratis
+    </h2>
+    <p class="mt-4 text-[16px] leading-relaxed text-neutral-600">
+      Jawaban atas pertanyaan umum tentang tool teks jadi suara gratis ElephantLabs.
+    </p>
+    <div class="mt-8 divide-y divide-neutral-100 rounded-2xl border border-neutral-200 px-6">
+      {faqs.map((f) => (
+        <details class="group py-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-[16px] font-semibold text-black [&::-webkit-details-marker]:hidden">
+            {f.q}
+            <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-neutral-200 text-neutral-500 transition-transform group-open:rotate-45 group-open:border-black group-open:text-black">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 1.5v9M1.5 6h9"/></svg>
+            </span>
+          </summary>
+          <p class="mt-3 text-[15px] leading-relaxed text-neutral-600">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

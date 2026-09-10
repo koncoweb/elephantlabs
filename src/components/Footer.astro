@@ -1,0 +1,66 @@
+---
+const company = [
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+const legal = [
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Data Security', href: '/security' },
+];
+---
+
+<footer class="border-t border-neutral-100 bg-white">
+  <div class="mx-auto max-w-[1200px] px-6 py-14 lg:px-8">
+    <div class="grid grid-cols-2 gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div class="col-span-2 md:col-span-1">
+        <a href="/" class="flex items-center gap-2.5" aria-label="ElephantLabs home">
+          <img src="/elephantlabslogo.png" alt="ElephantLabs logo" class="h-9 w-auto" />
+          <span class="leading-none">
+            <span class="block text-[17px] font-bold tracking-[-0.02em] text-black">ElephantLabs</span>
+            <span class="mt-1 block text-[10.5px] font-medium tracking-wide text-neutral-500">a Koncoweb Product</span>
+          </span>
+        </a>
+        <p class="mt-4 max-w-[260px] text-[14px] leading-relaxed text-neutral-500">
+          Membuat teks jadi suara — natural voice AI powered by Deepgram Flux.
+        </p>
+      </div>
+      <nav aria-label="Company">
+        <p class="text-[13px] font-semibold uppercase tracking-wide text-neutral-400">Company</p>
+        <ul class="mt-4 space-y-2.5">
+          {company.map((l) => (
+            <li><a href={l.href} class="text-[14.5px] font-medium text-neutral-600 transition-colors hover:text-black">{l.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <nav aria-label="Legal">
+        <p class="text-[13px] font-semibold uppercase tracking-wide text-neutral-400">Legal</p>
+        <ul class="mt-4 space-y-2.5">
+          {legal.map((l) => (
+            <li><a href={l.href} class="text-[14.5px] font-medium text-neutral-600 transition-colors hover:text-black">{l.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <div>
+        <p class="text-[13px] font-semibold uppercase tracking-wide text-neutral-400">Contact</p>
+        <ul class="mt-4 space-y-2.5 text-[14.5px] font-medium text-neutral-600">
+          <li>M.M. Billy</li>
+          <li><a href="mailto:koncoweb@gmail.com" class="transition-colors hover:text-black">koncoweb@gmail.com</a></li>
+          <li><a href="tel:+6285150731986" class="transition-colors hover:text-black">+62 851-5073-1986</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 flex flex-col gap-4 border-t border-neutral-100 pt-6 text-[13px] text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
+      <p class="flex items-center gap-2.5">
+        <img src="/logo-koncoweb.svg" alt="Koncoweb" class="h-5 w-auto grayscale opacity-70" loading="lazy" />
+        <span>© 2026 Koncoweb. All rights reserved.</span>
+      </p>
+      <p>
+        <a href="/privacy" class="hover:text-black">Privacy</a>
+        <span class="mx-2 text-neutral-300">·</span>
+        <a href="/security" class="hover:text-black">Security</a>
+        <span class="mx-2 text-neutral-300">·</span>
+        <a href="/contact" class="hover:text-black">Contact</a>
+      </p>
+    </div>
+  </div>
+</footer>

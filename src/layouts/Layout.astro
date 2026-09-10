@@ -4,12 +4,58 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  keywords?: string;
+  noindex?: boolean;
+  /** Extra JSON-LD objects (e.g. FAQPage) appended after the base schemas. */
+  schema?: Record<string, unknown>[];
 }
 
+const SITE = 'https://elephantlabs.web.id';
+
 const {
-  title = 'ElephantLabs — Bringing technology to life',
-  description = 'ElephantLabs landing page statis — hero section ala ElevenLabs.'
+  title = 'ElephantLabs — TTS Gratis: Ubah Teks Jadi Suara Online',
+  description = 'ElephantLabs adalah tool teks to speech gratis. Ubah teks jadi suara natural, converter teks ke suara MP3, narator AI gratis tanpa daftar.',
+  keywords = 'teks to speech gratis, tts gratis, teks jadi suara gratis, teks ke suara gratis, converter teks jadi suara, narator ai gratis, tool teks suara gratis, text to speech bahasa indonesia gratis',
+  noindex = false,
+  schema = []
 } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, SITE).toString();
+const ogImage = `${SITE}/og.svg`;
+
+const baseSchemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'ElephantLabs',
+    url: SITE,
+    inLanguage: 'id'
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'ElephantLabs',
+    url: SITE,
+    logo: `${SITE}/favicon.svg`,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      email: 'koncoweb@gmail.com',
+      telephone: '+62-851-5073-1986',
+      availableLanguage: ['Indonesian', 'English']
+    }
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'ElephantLabs Text to Speech',
+    applicationCategory: 'MultimediaApplication',
+    operatingSystem: 'Web',
+    url: SITE,
+    inLanguage: 'id',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'IDR' }
+  }
+];
 ---
 
 <!doctype html>
@@ -17,16 +63,39 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="description" content={description} />
-    <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#000000" />
+    <meta name="author" content="ElephantLabs" />
+    <meta name="geo.region" content="ID" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ElephantLabs" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+    <script type="application/ld+json" set:html={JSON.stringify([...baseSchemas, ...schema])} />
   </head>
   <body class="bg-white text-neutral-950 antialiased">
     <slot />

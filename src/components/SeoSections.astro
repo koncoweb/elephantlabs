@@ -1,0 +1,80 @@
+---
+// Section SEO: fitur + cara pakai dengan heading kaya keyword (ID)
+const features = [
+  {
+    title: 'TTS gratis tanpa daftar',
+    desc: 'Langsung pakai converter teks jadi suara ini tanpa akun, tanpa langganan, dan tanpa kartu kredit.'
+  },
+  {
+    title: 'Download MP3 instan',
+    desc: 'Setiap hasil teks ke suara gratis bisa diputar ulang dan diunduh sebagai file MP3 siap pakai.'
+  },
+  {
+    title: 'Banyak suara AI natural',
+    desc: 'Pilih dari belasan karakter narator AI gratis — suara perempuan maupun laki-laki yang terdengar manusiawi.'
+  },
+  {
+    title: 'Cepat dan mudah',
+    desc: 'Tempel teks hingga 2.000 karakter, tekan play, dan audio jadi dalam hitungan detik.'
+  }
+];
+
+const steps = [
+  {
+    n: '1',
+    title: 'Tulis atau tempel teks',
+    desc: 'Masukkan teks Bahasa Indonesia atau Inggris ke kolom playground di atas.'
+  },
+  {
+    n: '2',
+    title: 'Pilih suara AI',
+    desc: 'Tentukan narator favorit — misalnya Alexis, Bree, atau Marcus.'
+  },
+  {
+    n: '3',
+    title: 'Play & download',
+    desc: 'Tekan play untuk mendengar, lalu klik Download untuk menyimpan MP3.'
+  }
+];
+---
+
+<section class="border-t border-neutral-100 bg-white">
+  <div class="mx-auto max-w-[1200px] px-6 py-16 lg:px-8 lg:py-24">
+    <h2 class="max-w-[720px] text-[28px] font-extrabold leading-tight tracking-[-0.02em] text-black sm:text-[36px]">
+      Converter teks jadi suara gratis untuk semua kebutuhan
+    </h2>
+    <p class="mt-4 max-w-[720px] text-[16px] leading-relaxed text-neutral-600">
+      ElephantLabs adalah tool teks suara gratis untuk kreator konten, pendidik, podcaster,
+      dan developer. Ubah naskah video, materi belajar, atau artikel menjadi audio
+      berkualitas studio — gratis, cepat, dan tanpa instal aplikasi.
+    </p>
+    <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {features.map((f) => (
+        <div class="rounded-2xl border border-neutral-200 bg-white p-6 transition-colors hover:border-neutral-400">
+          <h3 class="text-[17px] font-bold tracking-[-0.01em] text-black">{f.title}</h3>
+          <p class="mt-2 text-[14.5px] leading-relaxed text-neutral-600">{f.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="border-t border-neutral-100 bg-neutral-50">
+  <div class="mx-auto max-w-[1200px] px-6 py-16 lg:px-8 lg:py-24">
+    <h2 class="max-w-[720px] text-[28px] font-extrabold leading-tight tracking-[-0.02em] text-black sm:text-[36px]">
+      Cara menggunakan tool teks ke suara gratis
+    </h2>
+    <p class="mt-4 max-w-[720px] text-[16px] leading-relaxed text-neutral-600">
+      Hanya tiga langkah untuk mengubah teks menjadi suara dengan narator AI gratis:
+    </p>
+    <ol class="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+      {steps.map((s) => (
+        <li class="rounded-2xl border border-neutral-200 bg-white p-6">
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-black text-[15px] font-bold text-white">{s.n}</span>
+          <h3 class="mt-4 text-[17px] font-bold tracking-[-0.01em] text-black">{s.title}</h3>
+          <p class="mt-2 text-[14.5px] leading-relaxed text-neutral-600">{s.desc}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

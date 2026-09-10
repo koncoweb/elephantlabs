@@ -1,0 +1,98 @@
+---
+import Navbar from './Navbar.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  titleEn: string;
+  titleId: string;
+  descEn: string;
+  descId: string;
+  updatedEn: string;
+  updatedId: string;
+}
+
+const { titleEn, titleId, descEn, descId, updatedEn, updatedId } = Astro.props;
+
+const bodyCls =
+  "mt-8 text-[16px] leading-[1.75] text-neutral-800 [&_a]:font-medium [&_a]:text-black [&_a]:underline [&_a]:decoration-neutral-300 [&_a]:underline-offset-4 hover:[&_a]:decoration-black [&_h2]:mt-10 [&_h2]:text-[22px] [&_h2]:font-bold [&_h2]:tracking-[-0.02em] [&_h2]:text-black [&_li]:mt-2 [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6";
+---
+
+<Navbar />
+<main class="bg-white">
+  <article class="mx-auto max-w-[760px] px-6 pb-24 pt-14 lg:px-8 lg:pt-16">
+    <!-- Toggle bahasa -->
+    <div class="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 p-1" role="group" aria-label="Language / Bahasa">
+      <button
+        id="doc-lang-en"
+        type="button"
+        class="rounded-full bg-black px-4 py-1.5 text-[13px] font-semibold text-white transition-colors"
+        aria-pressed="true"
+      >
+        English
+      </button>
+      <button
+        id="doc-lang-id"
+        type="button"
+        class="rounded-full px-4 py-1.5 text-[13px] font-semibold text-neutral-500 transition-colors hover:text-black"
+        aria-pressed="false"
+      >
+        Indonesia
+      </button>
+    </div>
+
+    <h1
+      id="doc-title"
+      data-en={titleEn}
+      data-id={titleId}
+      class="mt-6 text-[36px] font-extrabold leading-[1.05] tracking-[-0.03em] text-black sm:text-[44px]"
+    >
+      {titleEn}
+    </h1>
+    <p class="mt-3 text-[14px] text-neutral-500">
+      <span id="doc-updated-label" data-en="Last updated" data-id="Terakhir diperbarui">Last updated</span>:
+      <span id="doc-updated-date" data-en={updatedEn} data-id={updatedId}>{updatedEn}</span>
+    </p>
+
+    <div id="doc-body-en" class={bodyCls}>
+      <p class="text-[18px] leading-[1.7] text-neutral-600">{descEn}</p>
+      <slot name="en" />
+    </div>
+    <div id="doc-body-id" class:list={[bodyCls, "hidden"]}>
+      <p class="text-[18px] leading-[1.7] text-neutral-600">{descId}</p>
+      <slot name="id" />
+    </div>
+  </article>
+</main>
+<Footer />
+
+<script>
+  const btnEn = document.getElementById("doc-lang-en");
+  const btnId = document.getElementById("doc-lang-id");
+  const title = document.getElementById("doc-title");
+  const upLabel = document.getElementById("doc-updated-label");
+  const upDate = document.getElementById("doc-updated-date");
+  const bodyEn = document.getElementById("doc-body-en");
+  const bodyId = document.getElementById("doc-body-id");
+
+  const activeCls = ["bg-black", "text-white"];
+  const idleCls = ["text-neutral-500"];
+
+  function setLang(lang) {
+    const isEn = lang === "en";
+    title.textContent = isEn ? title.dataset.en : title.dataset.id;
+    upLabel.textContent = isEn ? upLabel.dataset.en : upLabel.dataset.id;
+    upDate.textContent = isEn ? upDate.dataset.en : upDate.dataset.id;
+    bodyEn.classList.toggle("hidden", !isEn);
+    bodyId.classList.toggle("hidden", isEn);
+    btnEn.classList.remove(...activeCls, ...idleCls);
+    btnId.classList.remove(...activeCls, ...idleCls);
+    btnEn.classList.add(...(isEn ? activeCls : idleCls));
+    btnId.classList.add(...(isEn ? idleCls : activeCls));
+    btnEn.setAttribute("aria-pressed", String(isEn));
+    btnId.setAttribute("aria-pressed", String(!isEn));
+    document.documentElement.lang = isEn ? "en" : "id";
+  }
+
+  btnEn?.addEventListener("click", () => setLang("en"));
+  btnId?.addEventListener("click", () => setLang("id"));
+</script>

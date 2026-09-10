@@ -1,6 +1,9 @@
 node_modules/
 dist/
 .astro/
+.netlify/
+.agents/
+skills-lock.json
 .env
 .env.local
 *.pcm

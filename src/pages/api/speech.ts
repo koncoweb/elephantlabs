@@ -1,8 +1,28 @@
 import type { APIRoute } from 'astro';
+import { homeVoices } from '../../data/voices';
 
 export const prerender = false;
 
 const MODEL = 'deepgram/flux-tts:free';
+const AUTH_URL = import.meta.env.PUBLIC_NEON_AUTH_URL as string | undefined;
+
+/** 3 suara home bebas dipakai anonim; sisanya wajib login. */
+const HOME_VOICE_IDS = new Set(homeVoices.map((v) => v.id));
+
+/** Verifikasi sesi via managed Neon Auth (forward cookie browser). */
+async function hasSession(request: Request): Promise<boolean> {
+  if (!AUTH_URL) return false;
+  try {
+    const res = await fetch(`${AUTH_URL}/get-session`, {
+      headers: { cookie: request.headers.get('cookie') ?? '' }
+    });
+    if (!res.ok) return false;
+    const data = (await res.json()) as { session?: unknown };
+    return Boolean(data?.session);
+  } catch {
+    return false;
+  }
+}
 
 const ALLOWED_VOICES = new Set([
   'flux-alexis-en',
@@ -83,6 +103,14 @@ export const POST: APIRoute = async ({ request }) => {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     });
+  }
+  if (!HOME_VOICE_IDS.has(voice) && !(await hasSession(request))) {
+    return new Response(
+      JSON.stringify({
+        error: { code: 401, message: 'Login dengan akun koncoweb untuk memakai suara ini' }
+      }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
   }
 
   let upstream: Response;
